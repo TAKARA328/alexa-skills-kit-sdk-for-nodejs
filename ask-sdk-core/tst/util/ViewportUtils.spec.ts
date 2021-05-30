@@ -59,6 +59,7 @@ describe('ViewportUtils', () => {
     it('should be able to resolve viewport profile', () => {
         const requestEnvelope = JsonProvider.requestEnvelope();
         requestEnvelope.context.Viewport = {
+            mode : undefined,
             shape : undefined,
             currentPixelWidth : undefined,
             currentPixelHeight : undefined,
@@ -70,66 +71,91 @@ describe('ViewportUtils', () => {
             touch : [],
         };
         requestEnvelope.context.Viewport.shape = 'ROUND';
+        requestEnvelope.context.Viewport.mode = 'HUB';
         requestEnvelope.context.Viewport.currentPixelHeight = 300;
         requestEnvelope.context.Viewport.currentPixelWidth = 300;
         requestEnvelope.context.Viewport.dpi = 160;
         expect(getViewportProfile(requestEnvelope)).eq('HUB-ROUND-SMALL');
 
         requestEnvelope.context.Viewport.shape = 'RECTANGLE';
+        requestEnvelope.context.Viewport.mode = 'HUB';
         requestEnvelope.context.Viewport.currentPixelHeight = 300;
         requestEnvelope.context.Viewport.currentPixelWidth = 960;
         requestEnvelope.context.Viewport.dpi = 160;
         expect(getViewportProfile(requestEnvelope)).eq('HUB-LANDSCAPE-SMALL');
 
         requestEnvelope.context.Viewport.shape = 'RECTANGLE';
+        requestEnvelope.context.Viewport.mode = 'HUB';
         requestEnvelope.context.Viewport.currentPixelHeight = 600;
         requestEnvelope.context.Viewport.currentPixelWidth = 960;
-        requestEnvelope.context.Viewport.dpi = 160;
+        requestEnvelope.context.Viewport.dpi = 213;
         expect(getViewportProfile(requestEnvelope)).eq('HUB-LANDSCAPE-MEDIUM');
 
         requestEnvelope.context.Viewport.shape = 'RECTANGLE';
+        requestEnvelope.context.Viewport.mode = 'HUB';
         requestEnvelope.context.Viewport.currentPixelHeight = 960;
         requestEnvelope.context.Viewport.currentPixelWidth = 1280;
         requestEnvelope.context.Viewport.dpi = 160;
         expect(getViewportProfile(requestEnvelope)).eq('HUB-LANDSCAPE-LARGE');
 
         requestEnvelope.context.Viewport.shape = 'RECTANGLE';
-        requestEnvelope.context.Viewport.currentPixelHeight = 300;
+        requestEnvelope.context.Viewport.mode = 'MOBILE';
+        requestEnvelope.context.Viewport.currentPixelHeight = 320;
         requestEnvelope.context.Viewport.currentPixelWidth = 600;
-        requestEnvelope.context.Viewport.dpi = 240;
+        requestEnvelope.context.Viewport.dpi = 160;
         expect(getViewportProfile(requestEnvelope)).eq('MOBILE-LANDSCAPE-SMALL');
 
         requestEnvelope.context.Viewport.shape = 'RECTANGLE';
+        requestEnvelope.context.Viewport.mode = 'MOBILE';
         requestEnvelope.context.Viewport.currentPixelHeight = 600;
-        requestEnvelope.context.Viewport.currentPixelWidth = 300;
-        requestEnvelope.context.Viewport.dpi = 240;
+        requestEnvelope.context.Viewport.currentPixelWidth = 320;
+        requestEnvelope.context.Viewport.dpi = 160;
         expect(getViewportProfile(requestEnvelope)).eq('MOBILE-PORTRAIT-SMALL');
 
         requestEnvelope.context.Viewport.shape = 'RECTANGLE';
-        requestEnvelope.context.Viewport.currentPixelHeight = 600;
+        requestEnvelope.context.Viewport.mode = 'MOBILE';
+        requestEnvelope.context.Viewport.currentPixelHeight = 320;
         requestEnvelope.context.Viewport.currentPixelWidth = 960;
-        requestEnvelope.context.Viewport.dpi = 240;
+        requestEnvelope.context.Viewport.dpi = 160;
         expect(getViewportProfile(requestEnvelope)).eq('MOBILE-LANDSCAPE-MEDIUM');
 
         requestEnvelope.context.Viewport.shape = 'RECTANGLE';
+        requestEnvelope.context.Viewport.mode = 'MOBILE';
         requestEnvelope.context.Viewport.currentPixelHeight = 960;
-        requestEnvelope.context.Viewport.currentPixelWidth = 600;
-        requestEnvelope.context.Viewport.dpi = 240;
+        requestEnvelope.context.Viewport.currentPixelWidth = 320;
+        requestEnvelope.context.Viewport.dpi = 160;
         expect(getViewportProfile(requestEnvelope)).eq('MOBILE-PORTRAIT-MEDIUM');
 
         requestEnvelope.context.Viewport.shape = 'RECTANGLE';
+        requestEnvelope.context.Viewport.mode = 'MOBILE';
+        requestEnvelope.context.Viewport.currentPixelHeight = 320;
+        requestEnvelope.context.Viewport.currentPixelWidth = 1280;
+        requestEnvelope.context.Viewport.dpi = 240;
+        expect(getViewportProfile(requestEnvelope)).eq('MOBILE-LANDSCAPE-LARGE');
+
+        requestEnvelope.context.Viewport.shape = 'RECTANGLE';
+        requestEnvelope.context.Viewport.mode = 'MOBILE';
+        requestEnvelope.context.Viewport.currentPixelHeight = 1280;
+        requestEnvelope.context.Viewport.currentPixelWidth = 320;
+        requestEnvelope.context.Viewport.dpi = 240;
+        expect(getViewportProfile(requestEnvelope)).eq('MOBILE-PORTRAIT-LARGE');
+
+        requestEnvelope.context.Viewport.shape = 'RECTANGLE';
+        requestEnvelope.context.Viewport.mode = 'TV';
         requestEnvelope.context.Viewport.currentPixelHeight = 960;
         requestEnvelope.context.Viewport.currentPixelWidth = 1920;
         requestEnvelope.context.Viewport.dpi = 320;
         expect(getViewportProfile(requestEnvelope)).eq('TV-LANDSCAPE-XLARGE');
 
         requestEnvelope.context.Viewport.shape = 'RECTANGLE';
+        requestEnvelope.context.Viewport.mode = 'TV';
         requestEnvelope.context.Viewport.currentPixelHeight = 1920;
         requestEnvelope.context.Viewport.currentPixelWidth = 300;
         requestEnvelope.context.Viewport.dpi = 320;
         expect(getViewportProfile(requestEnvelope)).eq('TV-PORTRAIT-MEDIUM');
 
         requestEnvelope.context.Viewport.shape = 'RECTANGLE';
+        requestEnvelope.context.Viewport.mode = 'TV';
         requestEnvelope.context.Viewport.currentPixelHeight = 600;
         requestEnvelope.context.Viewport.currentPixelWidth = 960;
         requestEnvelope.context.Viewport.dpi = 320;

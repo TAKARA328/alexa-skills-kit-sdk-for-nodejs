@@ -27,6 +27,8 @@ export type ViewportProfile =
     'MOBILE-PORTRAIT-SMALL' |
     'MOBILE-LANDSCAPE-MEDIUM' |
     'MOBILE-PORTRAIT-MEDIUM' |
+    'MOBILE-LANDSCAPE-LARGE' |
+    'MOBILE-PORTRAIT-LARGE' |
     'TV-LANDSCAPE-XLARGE' |
     'TV-PORTRAIT-MEDIUM' |
     'TV-LANDSCAPE-MEDIUM'|
@@ -137,6 +139,7 @@ export function getViewportProfile(requestEnvelope : RequestEnvelope) : Viewport
         const currentPixelWidth = viewportState.currentPixelWidth;
         const currentPixelHeight = viewportState.currentPixelHeight;
         const dpi = viewportState.dpi;
+        const mode = viewportState.mode;
 
         const shape : Shape = viewportState.shape;
         const viewportOrientation = getViewportOrientation(currentPixelWidth, currentPixelHeight);
@@ -144,103 +147,127 @@ export function getViewportProfile(requestEnvelope : RequestEnvelope) : Viewport
         const pixelWidthSizeGroup = getViewportSizeGroup(currentPixelWidth);
         const pixelHeightSizeGroup = getViewportSizeGroup(currentPixelHeight);
 
-        if (shape === 'ROUND'
-            && viewportOrientation === 'EQUAL'
-            && viewportDpiGroup === 'LOW'
-            && pixelWidthSizeGroup === 'XSMALL'
-            && pixelHeightSizeGroup === 'XSMALL'
-        ) {
-            return 'HUB-ROUND-SMALL';
+        if (mode === 'HUB') {
+            if (shape === 'ROUND'
+                && viewportOrientation === 'EQUAL'
+                && viewportDpiGroup === 'LOW'
+                && pixelWidthSizeGroup === 'XSMALL'
+                && pixelHeightSizeGroup === 'XSMALL'
+            ) {
+                return 'HUB-ROUND-SMALL';
+            }
+
+            if (shape === 'RECTANGLE'
+                && viewportOrientation === 'LANDSCAPE'
+                && viewportDpiGroup === 'LOW'
+                && ViewportSizeGroupOrder.indexOf(pixelWidthSizeGroup) <= ViewportSizeGroupOrder.indexOf('MEDIUM')
+                && ViewportSizeGroupOrder.indexOf(pixelHeightSizeGroup) <= ViewportSizeGroupOrder.indexOf('XSMALL')
+            ) {
+                return 'HUB-LANDSCAPE-SMALL';
+            }
+
+            if (shape === 'RECTANGLE'
+                && viewportOrientation === 'LANDSCAPE'
+                && viewportDpiGroup === 'MEDIUM'
+                && ViewportSizeGroupOrder.indexOf(pixelWidthSizeGroup) <= ViewportSizeGroupOrder.indexOf('MEDIUM')
+                && ViewportSizeGroupOrder.indexOf(pixelHeightSizeGroup) <= ViewportSizeGroupOrder.indexOf('SMALL')
+            ) {
+                return 'HUB-LANDSCAPE-MEDIUM';
+            }
+
+            if (shape === 'RECTANGLE'
+                && viewportOrientation === 'LANDSCAPE'
+                && viewportDpiGroup === 'LOW'
+                && ViewportSizeGroupOrder.indexOf(pixelWidthSizeGroup) >= ViewportSizeGroupOrder.indexOf('LARGE')
+                && ViewportSizeGroupOrder.indexOf(pixelHeightSizeGroup) >= ViewportSizeGroupOrder.indexOf('SMALL')
+            ) {
+                return 'HUB-LANDSCAPE-LARGE';
+            }
         }
 
-        if (shape === 'RECTANGLE'
-            && viewportOrientation === 'LANDSCAPE'
-            && viewportDpiGroup === 'LOW'
-            && ViewportSizeGroupOrder.indexOf(pixelWidthSizeGroup) <= ViewportSizeGroupOrder.indexOf('MEDIUM')
-            && ViewportSizeGroupOrder.indexOf(pixelHeightSizeGroup) <= ViewportSizeGroupOrder.indexOf('XSMALL')
-        ) {
-            return 'HUB-LANDSCAPE-SMALL';
+        if (mode === 'MOBILE') {
+            if (shape === 'RECTANGLE'
+                && viewportOrientation === 'LANDSCAPE'
+                && viewportDpiGroup === 'LOW'
+                && ViewportSizeGroupOrder.indexOf(pixelWidthSizeGroup) >= ViewportSizeGroupOrder.indexOf('MEDIUM')
+                && ViewportSizeGroupOrder.indexOf(pixelHeightSizeGroup) >= ViewportSizeGroupOrder.indexOf('XSMALL')
+            ) {
+                return 'MOBILE-LANDSCAPE-MEDIUM';
+            }
+
+            if (shape === 'RECTANGLE'
+                && viewportOrientation === 'PORTRAIT'
+                && viewportDpiGroup === 'LOW'
+                && ViewportSizeGroupOrder.indexOf(pixelWidthSizeGroup) >= ViewportSizeGroupOrder.indexOf('XSMALL')
+                && ViewportSizeGroupOrder.indexOf(pixelHeightSizeGroup) >= ViewportSizeGroupOrder.indexOf('MEDIUM')
+            ) {
+                return 'MOBILE-PORTRAIT-MEDIUM';
+            }
+
+            if (shape === 'RECTANGLE'
+                && viewportOrientation === 'LANDSCAPE'
+                && viewportDpiGroup === 'LOW'
+                && ViewportSizeGroupOrder.indexOf(pixelWidthSizeGroup) >= ViewportSizeGroupOrder.indexOf('SMALL')
+                && ViewportSizeGroupOrder.indexOf(pixelHeightSizeGroup) >= ViewportSizeGroupOrder.indexOf('XSMALL')
+            ) {
+                return 'MOBILE-LANDSCAPE-SMALL';
+            }
+
+            if (shape === 'RECTANGLE'
+                && viewportOrientation === 'PORTRAIT'
+                && viewportDpiGroup === 'LOW'
+                && ViewportSizeGroupOrder.indexOf(pixelWidthSizeGroup) >= ViewportSizeGroupOrder.indexOf('XSMALL')
+                && ViewportSizeGroupOrder.indexOf(pixelHeightSizeGroup) >= ViewportSizeGroupOrder.indexOf('SMALL')
+            ) {
+                return 'MOBILE-PORTRAIT-SMALL';
+            }
+
+            if (shape === 'RECTANGLE'
+                && viewportOrientation === 'LANDSCAPE'
+                && viewportDpiGroup === 'MEDIUM'
+                && ViewportSizeGroupOrder.indexOf(pixelWidthSizeGroup) >= ViewportSizeGroupOrder.indexOf('MEDIUM')
+                && ViewportSizeGroupOrder.indexOf(pixelHeightSizeGroup) >= ViewportSizeGroupOrder.indexOf('XSMALL')
+            ) {
+                return 'MOBILE-LANDSCAPE-LARGE';
+            }
+
+            if (shape === 'RECTANGLE'
+                && viewportOrientation === 'PORTRAIT'
+                && viewportDpiGroup === 'MEDIUM'
+                && ViewportSizeGroupOrder.indexOf(pixelWidthSizeGroup) >= ViewportSizeGroupOrder.indexOf('XSMALL')
+                && ViewportSizeGroupOrder.indexOf(pixelHeightSizeGroup) >= ViewportSizeGroupOrder.indexOf('MEDIUM')
+            ) {
+                return 'MOBILE-PORTRAIT-LARGE';
+            }
         }
 
-        if (shape === 'RECTANGLE'
-            && viewportOrientation === 'LANDSCAPE'
-            && viewportDpiGroup === 'LOW'
-            && ViewportSizeGroupOrder.indexOf(pixelWidthSizeGroup) <= ViewportSizeGroupOrder.indexOf('MEDIUM')
-            && ViewportSizeGroupOrder.indexOf(pixelHeightSizeGroup) <= ViewportSizeGroupOrder.indexOf('SMALL')
-        ) {
-            return 'HUB-LANDSCAPE-MEDIUM';
-        }
+        if (mode === 'TV') {
+            if (shape === 'RECTANGLE'
+                && viewportOrientation === 'LANDSCAPE'
+                && ViewportDpiGroupOrder.indexOf(viewportDpiGroup) >= ViewportDpiGroupOrder.indexOf('HIGH')
+                && ViewportSizeGroupOrder.indexOf(pixelWidthSizeGroup) >= ViewportSizeGroupOrder.indexOf('XLARGE')
+                && ViewportSizeGroupOrder.indexOf(pixelHeightSizeGroup) >= ViewportSizeGroupOrder.indexOf('MEDIUM')
+            ) {
+                return 'TV-LANDSCAPE-XLARGE';
+            }
 
-        if (shape === 'RECTANGLE'
-            && viewportOrientation === 'LANDSCAPE'
-            && viewportDpiGroup === 'LOW'
-            && ViewportSizeGroupOrder.indexOf(pixelWidthSizeGroup) >= ViewportSizeGroupOrder.indexOf('LARGE')
-            && ViewportSizeGroupOrder.indexOf(pixelHeightSizeGroup) >= ViewportSizeGroupOrder.indexOf('SMALL')
-        ) {
-            return 'HUB-LANDSCAPE-LARGE';
-        }
+            if (shape === 'RECTANGLE'
+                && viewportOrientation === 'PORTRAIT'
+                && ViewportDpiGroupOrder.indexOf(viewportDpiGroup) >= ViewportDpiGroupOrder.indexOf('HIGH')
+                && pixelWidthSizeGroup === 'XSMALL'
+                && pixelHeightSizeGroup === 'XLARGE'
+            ) {
+                return 'TV-PORTRAIT-MEDIUM';
+            }
 
-        if (shape === 'RECTANGLE'
-            && viewportOrientation === 'LANDSCAPE'
-            && viewportDpiGroup === 'MEDIUM'
-            && ViewportSizeGroupOrder.indexOf(pixelWidthSizeGroup) >= ViewportSizeGroupOrder.indexOf('MEDIUM')
-            && ViewportSizeGroupOrder.indexOf(pixelHeightSizeGroup) >= ViewportSizeGroupOrder.indexOf('SMALL')
-        ) {
-            return 'MOBILE-LANDSCAPE-MEDIUM';
-        }
-
-        if (shape === 'RECTANGLE'
-            && viewportOrientation === 'PORTRAIT'
-            && viewportDpiGroup === 'MEDIUM'
-            && ViewportSizeGroupOrder.indexOf(pixelWidthSizeGroup) >= ViewportSizeGroupOrder.indexOf('SMALL')
-            && ViewportSizeGroupOrder.indexOf(pixelHeightSizeGroup) >= ViewportSizeGroupOrder.indexOf('MEDIUM')
-        ) {
-            return 'MOBILE-PORTRAIT-MEDIUM';
-        }
-
-        if (shape === 'RECTANGLE'
-            && viewportOrientation === 'LANDSCAPE'
-            && viewportDpiGroup === 'MEDIUM'
-            && ViewportSizeGroupOrder.indexOf(pixelWidthSizeGroup) >= ViewportSizeGroupOrder.indexOf('SMALL')
-            && ViewportSizeGroupOrder.indexOf(pixelHeightSizeGroup) >= ViewportSizeGroupOrder.indexOf('XSMALL')
-        ) {
-            return 'MOBILE-LANDSCAPE-SMALL';
-        }
-
-        if (shape === 'RECTANGLE'
-            && viewportOrientation === 'PORTRAIT'
-            && viewportDpiGroup === 'MEDIUM'
-            && ViewportSizeGroupOrder.indexOf(pixelWidthSizeGroup) >= ViewportSizeGroupOrder.indexOf('XSMALL')
-            && ViewportSizeGroupOrder.indexOf(pixelHeightSizeGroup) >= ViewportSizeGroupOrder.indexOf('SMALL')
-        ) {
-            return 'MOBILE-PORTRAIT-SMALL';
-        }
-
-        if (shape === 'RECTANGLE'
-            && viewportOrientation === 'LANDSCAPE'
-            && ViewportDpiGroupOrder.indexOf(viewportDpiGroup) >= ViewportDpiGroupOrder.indexOf('HIGH')
-            && ViewportSizeGroupOrder.indexOf(pixelWidthSizeGroup) >= ViewportSizeGroupOrder.indexOf('XLARGE')
-            && ViewportSizeGroupOrder.indexOf(pixelHeightSizeGroup) >= ViewportSizeGroupOrder.indexOf('MEDIUM')
-        ) {
-            return 'TV-LANDSCAPE-XLARGE';
-        }
-
-        if (shape === 'RECTANGLE'
-            && viewportOrientation === 'PORTRAIT'
-            && ViewportDpiGroupOrder.indexOf(viewportDpiGroup) >= ViewportDpiGroupOrder.indexOf('HIGH')
-            && pixelWidthSizeGroup === 'XSMALL'
-            && pixelHeightSizeGroup === 'XLARGE'
-        ) {
-            return 'TV-PORTRAIT-MEDIUM';
-        }
-
-        if (shape === 'RECTANGLE'
-            && viewportOrientation === 'LANDSCAPE'
-            && ViewportDpiGroupOrder.indexOf(viewportDpiGroup) >= ViewportDpiGroupOrder.indexOf('HIGH')
-            && pixelWidthSizeGroup === 'MEDIUM'
-            && pixelHeightSizeGroup === 'SMALL'
-        ) {
-            return 'TV-LANDSCAPE-MEDIUM';
+            if (shape === 'RECTANGLE'
+                && viewportOrientation === 'LANDSCAPE'
+                && ViewportDpiGroupOrder.indexOf(viewportDpiGroup) >= ViewportDpiGroupOrder.indexOf('HIGH')
+                && pixelWidthSizeGroup === 'MEDIUM'
+                && pixelHeightSizeGroup === 'SMALL'
+            ) {
+                return 'TV-LANDSCAPE-MEDIUM';
+            }
         }
     }
 
